@@ -1,5 +1,6 @@
 let stompClient = null;
 let sender = null;
+let receiver = null;
 
 document.getElementById('btnLogin').addEventListener('click', () => {
     sender = document.getElementById('sender').value.trim();
@@ -8,7 +9,8 @@ document.getElementById('btnLogin').addEventListener('click', () => {
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, () => {
-            stompClient.subscribe('/topic/public', onMessageReceived);
+            // stompClient.subscribe('/topic/public', onMessageReceived);
+            stompClient.subscribe('/user/queue/private', onMessageReceived);
         });
     }
     alert("Đăng nhập thành công");
@@ -26,13 +28,16 @@ function onMessageReceived(payload) {
 
 
 document.getElementById('btnSend').addEventListener('click', () => { 
+    receiver = document.getElementById('receiver').value.trim();
     var messageContent = document.getElementById('message').value.trim();
-    if (messageContent && stompClient) {
+    if (messageContent && stompClient && receiver) {
         var chatMessage = {
             sender: sender,
+            receiver: receiver,
             content: messageContent,
         };
-        stompClient.send("/app/sendMessage", {}, JSON.stringify(chatMessage));
+        // stompClient.send("/app/sendMessage", {}, JSON.stringify(chatMessage));
+        stompClient.send("/app/sendMessagePrivate", {}, JSON.stringify(chatMessage));
         document.getElementById('message').value = '';
     }
 });
