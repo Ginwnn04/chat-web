@@ -1,9 +1,20 @@
 package com.example.chat_web;
 
 public class Message {
-    private String senderId;  // ID của userA
-    private String recipientId; // ID của userB
+    private String sender;  //
+    private String receiver; //
     private String content; // Nội dung tin nhắn
 
 
+    public String getSender() {
+        return sender;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public String getContent() {
+        return content;
+    }
 }

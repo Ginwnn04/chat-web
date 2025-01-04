@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="main.css">
 </head>
+
 <body>
-    <form id="form">
+    <div class="top">
+        <input id="sender" placeholder="Type username sender" type="text">
+        <button id="btnLogin">Login</button>
+        <input id="receiver" placeholder="Type username receiver" type="text">
+    </div>
+    <div id="form">
         <div class="list-chat">
 
         </div>
@@ -17,28 +24,19 @@
                 <p class="name">Quang tèo</p>
             </div>
             <div class="chat">
-                <div class="sender">
-                    <p>Xin chào bạn</p>
-                </div>
-                <div class="sender">
-                    <p>Xin chào bạn 123</p>
-                </div>
-                <div class="receiver">
-                    <p>Hihihaha</p>
-                </div>
-                <div class="sender">
-                    <p>Xin chào bạn 123</p>
-                </div>
-                <div class="receiver">
-                    <p>Hihihaha</p>
-                </div>
+
             </div>
             <div class="chat-bottom">
-                <input type="text" placeholder="Type message">
-                <button type="button">Send messsage</button>
+                <input id="message" type="text" placeholder="Type message">
+                <button id="btnSend" type="button">Send messsage</button>
             </div>
         </div>
 
-    </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="main.js"></script>
 </body>
+
 </html>

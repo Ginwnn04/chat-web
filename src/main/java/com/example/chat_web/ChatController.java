@@ -2,17 +2,28 @@ package com.example.chat_web;
 
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class ChatController {
 
-    SimpMess
+
     @MessageMapping("/sendMessage")
-    @SendTo("/topic/messages")
-    public Message handleMessage(Message message) {
-        return message; // Trả lại tin nhắn để gửi đến client
+    @SendTo("/topic/public")
+    public Message sendMessage(@Payload Message message) {
+        return message;
+    }
+
+    @MessageMapping("/addUser")
+    @SendTo("/topic/public")
+    public Message addUser(@Payload Message message,
+                               SimpMessageHeaderAccessor headerAccessor) {
+        // Add username in web socket session
+        headerAccessor.getSessionAttributes().put("username", message.getSender());
+        return message;
     }
 
 }
