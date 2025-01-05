@@ -1,60 +1,71 @@
-let stompClient = null;
-let sender = null;
-let receiver = null;
+let socket = null;
+const btnLogin = document.getElementById("btnLogin");
+const senderInput = document.getElementById("sender");
+const roomInput = document.getElementById("room");
+const messageInput = document.getElementById("message");
+const btnSend = document.getElementById("btnSend");
+const chatBox = document.querySelector(".chat");
 
-document.getElementById('btnLogin').addEventListener('click', () => {
-    sender = document.getElementById('sender').value.trim();
-    if(sender) {
-        var socket = new SockJS('/chat');
-        stompClient = Stomp.over(socket);
-
-        stompClient.connect({}, () => {
-            // stompClient.subscribe('/topic/public', onMessageReceived);
-            stompClient.subscribe('/user/queue/private', onMessageReceived);
-        });
+// Xử lý khi nhấn Login
+btnLogin.addEventListener("click", () => {
+    const sender = senderInput.value.trim();
+    const room = roomInput.value.trim();
+    if (!sender || !room) {
+        alert("Please enter both username and room!");
+        return;
     }
-    alert("Đăng nhập thành công");
+
+    // Kết nối đến server
+    socket = io("ws://127.0.0.1:8085", {
+        reconnection: false,
+        transports: ['websocket'], // Sử dụng WebSocket nếu có
+        query: { room }// Tắt việc nâng cấp lên EIO=4// Thêm room vào query
+    });
+
+    // Xử lý khi kết nối thành công
+    socket.on("connect", () => {
+        console.log(`Connected to socket server as ${sender} in room ${room}`);
+    });
+    socket.on("connect_error", (err) => {
+        console.log("Connection Error:", err);
+    });
+    socket.on("connect_timeout", () => {
+        console.log("Connection Timeout");
+    });
+
+    // Lắng nghe tin nhắn từ server
+    socket.on("get_message", (data) => {
+        
+        chatBox.innerHTML +=    `<div class="sender">
+                                    <p>${data.message}</p>
+                                </div>`;
+    });
+
+    alert(`Logged in as ${sender} in room ${room}`);
 });
- 
 
-function onMessageReceived(payload) {
-    var message = JSON.parse(payload.body);
-    const component = document.querySelector('.chat');
-    component.innerHTML += `<div class="sender">
-                                <p>${message.content}</p>
-                            </div>`;
-    
-}
+// Xử lý khi nhấn nút Send
+btnSend.addEventListener("click", () => {
+    if (!socket) {
+        alert("Please login first!");
+        return;
+    }
 
+    const sender = senderInput.value.trim();
+    const room = roomInput.value.trim();
+    const message = messageInput.value.trim();
 
-document.getElementById('btnSend').addEventListener('click', () => { 
-    receiver = document.getElementById('receiver').value.trim();
-    var messageContent = document.getElementById('message').value.trim();
-    if (messageContent && stompClient && receiver) {
-        var chatMessage = {
-            sender: sender,
-            receiver: receiver,
-            content: messageContent,
+    if (sender && room && message) {
+        const data = {
+            room: room, // Room hiện tại
+            type: "CLIENT",
+            message: `${sender}: ${message}`, // Tin nhắn kèm username
         };
-        // stompClient.send("/app/sendMessage", {}, JSON.stringify(chatMessage));
-        stompClient.send("/app/sendMessagePrivate", {}, JSON.stringify(chatMessage));
-        document.getElementById('message').value = '';
+        console.log(data);
+        socket.emit("send_message", data); // Gửi sự kiện 'send_message' đến server
+        messageInput.value = ""; // Xóa nội dung sau khi gửi
     }
-});
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    const chat = document.querySelector('.chat');
-
-    // Hàm cuộn xuống cuối
-    function scrollToBottom() {
-        chat.scrollTop = chat.scrollHeight;
+    else {
+        alert("Please fill in all fields!");
     }
-
-    // Sử dụng MutationObserver để theo dõi thay đổi trong div
-    const observer = new MutationObserver(scrollToBottom);
-    observer.observe(chat, { childList: true });
-
-    // Cuộn xuống khi tải trang
-    scrollToBottom();
 });

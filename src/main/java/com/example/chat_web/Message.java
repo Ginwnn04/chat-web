@@ -1,20 +1,45 @@
 package com.example.chat_web;
 
 public class Message {
-    private String sender;  //
-    private String receiver; //
-    private String content; // Nội dung tin nhắn
+    private MessageType type;
+    private String message;
+    private String room;
 
-
-    public String getSender() {
-        return sender;
+    public Message() {
     }
 
-    public String getReceiver() {
-        return receiver;
+    public Message(MessageType type, String message) {
+        this.type = type;
+        this.message = message;
     }
 
-    public String getContent() {
-        return content;
+    public MessageType getType() {
+        return type;
+    }
+
+    public void setType(MessageType type) {
+        this.type = type;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
+    }
+
+    public enum MessageType {
+        SERVER, CLIENT
     }
 }
+
+
