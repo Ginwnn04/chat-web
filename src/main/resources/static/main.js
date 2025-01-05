@@ -26,19 +26,13 @@ btnLogin.addEventListener("click", () => {
     socket.on("connect", () => {
         console.log(`Connected to socket server as ${sender} in room ${room}`);
     });
-    socket.on("connect_error", (err) => {
-        console.log("Connection Error:", err);
-    });
-    socket.on("connect_timeout", () => {
-        console.log("Connection Timeout");
-    });
+    
+
 
     // Lắng nghe tin nhắn từ server
     socket.on("get_message", (data) => {
         
-        chatBox.innerHTML +=    `<div class="sender">
-                                    <p>${data.message}</p>
-                                </div>`;
+        updateMessage(data);
     });
 
     alert(`Logged in as ${sender} in room ${room}`);
@@ -64,8 +58,26 @@ btnSend.addEventListener("click", () => {
         console.log(data);
         socket.emit("send_message", data); // Gửi sự kiện 'send_message' đến server
         messageInput.value = ""; // Xóa nội dung sau khi gửi
+        updateMessage(data);
     }
     else {
         alert("Please fill in all fields!");
     }
 });
+
+
+function updateMessage(data) {
+    let elm = "";
+    if (data.type === "CLIENT") {
+        elm = `<div class="sender">
+                    <p>${data.message}</p>
+                </div>`;
+    } 
+    else {
+        elm = `<div class="receiver">
+                    <p>${data.message}</p>
+                </div>`;
+    }
+    chatBox.innerHTML += elm;
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
