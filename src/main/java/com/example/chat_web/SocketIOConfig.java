@@ -2,14 +2,17 @@ package com.example.chat_web;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.Transport;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SocketIOConfig {
 
-    private String host = "127.0.0.1";
-    private Integer port = 8085;
+    @Value("${socket-server.host}")
+    private String host;
+    @Value("${socket-server.port}")
+    private Integer port;
 
     @Bean
     public SocketIOServer socketIOServer() {
