@@ -1,4 +1,5 @@
 let socket = null;
+let sender = null;
 const btnLogin = document.getElementById("btnLogin");
 const senderInput = document.getElementById("sender");
 const roomInput = document.getElementById("room");
@@ -6,30 +7,34 @@ const messageInput = document.getElementById("message");
 const btnSend = document.getElementById("btnSend");
 const chatBox = document.querySelector(".chat");
 
-// Xử lý khi nhấn Login
+
 btnLogin.addEventListener("click", () => {
-    const sender = senderInput.value.trim();
+    sender = senderInput.value.trim();
     const room = roomInput.value.trim();
     if (!sender || !room) {
         alert("Please enter both username and room!");
         return;
     }
+    if (socket) {
+        socket.disconnect();
+        socket = null;
+    }
 
     // Kết nối đến server
     socket = io("ws://127.0.0.1:8085", {
         reconnection: false,
-        transports: ['websocket'], // Sử dụng WebSocket nếu có
-        query: { room }// Tắt việc nâng cấp lên EIO=4// Thêm room vào query
+        transports: ['websocket'],
+        query: { room }
     });
 
-    // Xử lý khi kết nối thành công
+
     socket.on("connect", () => {
         console.log(`Connected to socket server as ${sender} in room ${room}`);
     });
     
 
 
-    // Lắng nghe tin nhắn từ server
+
     socket.on("get_message", (data) => {
         
         updateMessage(data);
@@ -38,7 +43,7 @@ btnLogin.addEventListener("click", () => {
     alert(`Logged in as ${sender} in room ${room}`);
 });
 
-// Xử lý khi nhấn nút Send
+
 btnSend.addEventListener("click", () => {
     if (!socket) {
         alert("Please login first!");
@@ -51,13 +56,14 @@ btnSend.addEventListener("click", () => {
 
     if (sender && room && message) {
         const data = {
-            room: room, // Room hiện tại
+            sender: sender,
+            room: room,
             type: "CLIENT",
-            message: `${sender}: ${message}`, // Tin nhắn kèm username
+            message: message
         };
         console.log(data);
-        socket.emit("send_message", data); // Gửi sự kiện 'send_message' đến server
-        messageInput.value = ""; // Xóa nội dung sau khi gửi
+        socket.emit("send_message", data);
+        messageInput.value = "";
         updateMessage(data);
     }
     else {
@@ -68,7 +74,7 @@ btnSend.addEventListener("click", () => {
 
 function updateMessage(data) {
     let elm = "";
-    if (data.type === "CLIENT") {
+    if (sender === data.sender) {
         elm = `<div class="sender">
                     <p>${data.message}</p>
                 </div>`;

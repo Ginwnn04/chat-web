@@ -4,13 +4,20 @@ public class Message {
     private MessageType type;
     private String message;
     private String room;
+    private String sender;
 
     public Message() {
     }
 
-    public Message(MessageType type, String message) {
+    public Message(String sender, MessageType type, String message) {
+        this.sender = sender;
         this.type = type;
         this.message = message;
+    }
+
+
+    public String getSender() {
+        return sender;
     }
 
     public MessageType getType() {
