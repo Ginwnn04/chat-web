@@ -10,26 +10,51 @@ const chatBox = document.querySelector(".chat");
 
 
 window.onload = () => {
+
+    sender = window.location.search.split("=")[1];
     // Kết nối đến server
+
     socket = io("ws://127.0.0.1:8085", {
         reconnection: false,
         transports: ['websocket'],
+        query: { username: sender }
     });
 
 
+
+
     socket.on("connect", () => {
-        console.log(`Connected to socket server as ${sender} in room ${room}`);
+        console.log(`Connected to socket server as ${sender}`);
     });
     
 
 
 
     socket.on("get_message", (data) => {
-        
         updateMessage(data);
     });
+    socket.on("notification", (data) => { 
+        console.log(data);
+        let listUser = data.slice(1, data.length - 1);
+        if (listUser.indexOf(', ') !== -1) {
+            listUser = listUser.split(', ');
+        }
+        else {
+            listUser = [listUser];
+        }
+        let users = "";
+        listUser.forEach(user => {
+            if (user !== sender) {
+                users += `<div class="user">
+                        <p class="name">${user}</p>
+                    </div>`;
+                console.log(user);
+            }
+        });
+        document.getElementById("users-online").innerHTML = users;
+    });
 
-    alert(`Logged in as ${sender} in room ${room}`);
+    alert(`Logged in as ${sender}`);
 }
 
 

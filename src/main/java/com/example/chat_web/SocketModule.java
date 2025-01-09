@@ -5,8 +5,14 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
+import com.example.chat_web.entities.Users;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -15,6 +21,8 @@ public class SocketModule {
 
     private final SocketIOServer server;
     private final SocketService socketService;
+
+    private Map<String, String> users = new HashMap<>();
 
     public SocketModule(SocketIOServer server, SocketService socketService) {
         this.server = server;
@@ -36,24 +44,30 @@ public class SocketModule {
 
     private ConnectListener onConnected() {
         return (client) -> {
-//            String room = client.getHandshakeData().getSingleUrlParam("room");
+            String username = client.getHandshakeData().getSingleUrlParam("username");
+            System.out.println(username);
             log.info(client.getHandshakeData().getUrl());
             client.joinRoom("notification");
-
             log.info(client.getAllRooms().toString());
             server.getRoomOperations("notification").getClients().forEach(socketIOClient -> {
                 log.info(socketIOClient.getSessionId().toString());
             });
+            users.put(username, client.getSessionId().toString());
             log.info("Socket ID[{}]  Connected to socket", client.getSessionId().toString());
             log.info(server.getAllClients().toString());
             log.info(client.getAllRooms().toString());
+            System.out.println(users.toString());
+//            socketService.sendMessage("Server", "notification", "notification", client, users.keySet().toString());
+            server.getRoomOperations("notification").sendEvent("notification", users.keySet().toString());
         };
-
     }
 
     private DisconnectListener onDisconnected() {
         return client -> {
             log.info("Client[{}] - Disconnected from socket", client.getSessionId().toString());
+            users.values().remove(client.getSessionId().toString());
+            server.getRoomOperations("notification").sendEvent("notification", users.keySet().toString());
+
         };
     }
 

@@ -1,5 +1,6 @@
 package com.example.chat_web.controllers;
 
+import com.example.chat_web.SocketModule;
 import com.example.chat_web.entities.Users;
 import com.example.chat_web.services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserService userService;
+
     @GetMapping("/users")
     public List<Users> getAllUsers() {
         return userService.getAllUsers();

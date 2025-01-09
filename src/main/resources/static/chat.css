@@ -26,6 +26,19 @@ p {
     background-color: #333;
 }
 
+#users-online {
+    display: flex;
+    gap: 10px;
+    margin: 50px 50px 0 50px;
+}
+
+.user {
+    padding: 4px 8px;
+    background-color: #fff;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
 .top {
     margin: 50px 0 20px 50px;
 }

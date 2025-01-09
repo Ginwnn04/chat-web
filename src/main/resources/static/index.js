@@ -11,11 +11,11 @@ const a = document.getElementById('btnLogin').addEventListener('click', () => {
     fetch('/login', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json', // Thông báo định dạng dữ liệu
+            'Content-Type': 'application/json', 
         },
         body: JSON.stringify({
             username: username,
-            password: password,
+            password: password
         }),
     })
         .then((res) => res.json())
@@ -23,7 +23,7 @@ const a = document.getElementById('btnLogin').addEventListener('click', () => {
             console.log(data);
             if (data === true) {
                 alert('Đăng nhập thành công');
-                window.location.href = 'http://localhost:8080/chating.html';
+                window.location.href = `/chating.html?username=${username}`;
             } else {
                 alert('Đăng nhập thất bại');
             }
