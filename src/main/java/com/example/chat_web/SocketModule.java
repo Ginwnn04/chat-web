@@ -1,5 +1,6 @@
 package com.example.chat_web;
 
+import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
@@ -35,10 +36,17 @@ public class SocketModule {
 
     private ConnectListener onConnected() {
         return (client) -> {
-            String room = client.getHandshakeData().getSingleUrlParam("room");
+//            String room = client.getHandshakeData().getSingleUrlParam("room");
             log.info(client.getHandshakeData().getUrl());
-            client.joinRoom(room);
+            client.joinRoom("notification");
+
+            log.info(client.getAllRooms().toString());
+            server.getRoomOperations("notification").getClients().forEach(socketIOClient -> {
+                log.info(socketIOClient.getSessionId().toString());
+            });
             log.info("Socket ID[{}]  Connected to socket", client.getSessionId().toString());
+            log.info(server.getAllClients().toString());
+            log.info(client.getAllRooms().toString());
         };
 
     }
