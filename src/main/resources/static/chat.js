@@ -60,16 +60,16 @@ window.onload = () => {
 
 
 btnLogin.addEventListener("click", () => {
-    sender = senderInput.value.trim();
-    const room = roomInput.value.trim();
-    if (!sender || !room) {
-        alert("Please enter both username and room!");
-        return;
-    }
-    if (socket) {
-        socket.disconnect();
-        socket = null;
-    }
+    // sender = senderInput.value.trim();
+    // const room = roomInput.value.trim();
+    // if (!sender || !room) {
+    //     alert("Please enter both username and room!");
+    //     return;
+    // }
+    // if (socket) {
+    //     socket.disconnect();
+    //     socket = null;
+    // }
 
     // // Kết nối đến server
     // socket = io("ws://127.0.0.1:8085", {
@@ -138,3 +138,7 @@ function updateMessage(data) {
     chatBox.innerHTML += elm;
     chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+document.querySelector(".user").addEventListener("click", () => { 
+    document.getElementById("chat-name").textContent = document.querySelector(".user").textContent;
+});

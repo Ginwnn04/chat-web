@@ -1,6 +1,6 @@
 
 
-const a = document.getElementById('btnLogin').addEventListener('click', () => {
+document.getElementById('btnLogin').addEventListener('click', () => {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
@@ -30,3 +30,5 @@ const a = document.getElementById('btnLogin').addEventListener('click', () => {
         })
         .catch((error) => console.error('Error:', error));
 });
+
+
