@@ -30,9 +30,24 @@ public class SocketModule {
         server.addConnectListener(onConnected());
         server.addDisconnectListener(onDisconnected());
         server.addEventListener("send_message", Message.class, onChatReceived());
-
+        server.addEventListener("create_room", String.class, onCreateRoom());
     }
 
+
+    private DataListener<String> onCreateRoom() {
+        return (client, data, ackSender) -> {
+            String[] listSession = data.split(", ");
+            List<String> listUername = users.entrySet().stream().filter(elm -> {
+                for (String session : listSession) {
+                    if (elm.getValue().equals(session)) {
+                        return true;
+                    }
+                }
+                return false;
+            }).map(Map.Entry::getKey).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+            System.out.println(listUername.toString());
+        };
+    }
 
     private DataListener<Message> onChatReceived() {
         return (senderClient, data, ackSender) -> {
@@ -58,7 +73,8 @@ public class SocketModule {
             log.info(client.getAllRooms().toString());
             System.out.println(users.toString());
 //            socketService.sendMessage("Server", "notification", "notification", client, users.keySet().toString());
-            server.getRoomOperations("notification").sendEvent("notification", users.keySet().toString());
+            server.getRoomOperations("notification").sendEvent("notification", users.toString());
+
         };
     }
 
@@ -66,7 +82,7 @@ public class SocketModule {
         return client -> {
             log.info("Client[{}] - Disconnected from socket", client.getSessionId().toString());
             users.values().remove(client.getSessionId().toString());
-            server.getRoomOperations("notification").sendEvent("notification", users.keySet().toString());
+            server.getRoomOperations("notification").sendEvent("notification", users.toString());
 
         };
     }

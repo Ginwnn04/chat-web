@@ -36,17 +36,20 @@ window.onload = () => {
     socket.on("notification", (data) => { 
         console.log(data);
         let listUser = data.slice(1, data.length - 1);
+        console.log(listUser);
         if (listUser.indexOf(', ') !== -1) {
             listUser = listUser.split(', ');
         }
         else {
             listUser = [listUser];
         }
+        console.log(listUser);
         let users = "";
         listUser.forEach(user => {
-            if (user !== sender) {
-                users += `<div class="user">
-                        <p class="name">${user}</p>
+            const tmp = user.split("=");
+            if (tmp[0] !== sender) {
+                users += `<div id="${tmp[1]}" class="user" onclick="selectUsername(this)">
+                        <p id="username-online">${tmp[0]}</p>
                     </div>`;
                 console.log(user);
             }
@@ -139,6 +142,9 @@ function updateMessage(data) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-document.querySelector(".user").addEventListener("click", () => { 
-    document.getElementById("chat-name").textContent = document.querySelector(".user").textContent;
-});
+function selectUsername(obj) {
+    document.getElementById("chat-name").textContent = obj.childNodes[1].textContent;
+    console.log(socket.id);
+    socket.emit("create_room", socket.id + ", " + obj.getAttribute("id"));
+
+}
