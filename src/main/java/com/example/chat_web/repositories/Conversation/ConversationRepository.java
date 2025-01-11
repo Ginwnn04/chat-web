@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
     @Query(
-            value = "SELECT c FROM Conversation c WHERE (c.user1 = ?1 AND c.user2 = ?2) OR (c.user1 = ?2 AND c.user2 = ?1)",
+            value = "SELECT * FROM conversations c WHERE (c.user_1 = ?1 AND c.user_2 = ?2) OR (c.user_1 = ?2 AND c.user_2 = ?1)",
             nativeQuery = true)
     Optional<Conversation> isExistConversation(String user1, String user2);
 }

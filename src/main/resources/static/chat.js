@@ -1,5 +1,6 @@
 let socket = null;
 let sender = null;
+let conversation = null;
 const btnLogin = document.getElementById("btnLogin");
 const senderInput = document.getElementById("sender");
 const roomInput = document.getElementById("room");
@@ -144,7 +145,14 @@ function updateMessage(data) {
 
 function selectUsername(obj) {
     document.getElementById("chat-name").textContent = obj.childNodes[1].textContent;
-    console.log(socket.id);
-    socket.emit("create_room", socket.id + ", " + obj.getAttribute("id"));
-
+    socket.emit("load_room", socket.id + ", " + obj.getAttribute("id"));
+    fetch("http://localhost:8080/conversations", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            room: socket.id + ", " + obj.getAttribute("id")
+        })
+    })
 }

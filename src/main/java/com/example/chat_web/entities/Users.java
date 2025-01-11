@@ -21,8 +21,8 @@ public class Users {
     @Column(name = "full_name")
     private String fullName;
 
-    @OneToMany(mappedBy = "user1")
-    private List<Conversation> listConversation;
+
+
 
 
 }
