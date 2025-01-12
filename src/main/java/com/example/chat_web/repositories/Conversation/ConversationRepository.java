@@ -4,6 +4,7 @@ import com.example.chat_web.entities.Conversation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
@@ -11,4 +12,9 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
             value = "SELECT * FROM conversations c WHERE (c.user_1 = ?1 AND c.user_2 = ?2) OR (c.user_1 = ?2 AND c.user_2 = ?1)",
             nativeQuery = true)
     Optional<Conversation> isExistConversation(String user1, String user2);
+
+    @Query(
+            value = "SELECT * FROM conversations c WHERE c.user_1 = ?1 OR c.user_2 = ?1",
+            nativeQuery = true)
+    List<Conversation> findListConversation(String username);
 }

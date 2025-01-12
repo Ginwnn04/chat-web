@@ -56,6 +56,31 @@ p {
 .list-chat {
     width: 30%;
     height: 100%;
+    overflow-y: auto;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+.chat-item:hover {
+    background-color: #ccc;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+}
+
+.info p {
+    padding: 0;
+}
+
+.info p:first-child {
+    font-weight: bold;
 }
 
 .details-chat {

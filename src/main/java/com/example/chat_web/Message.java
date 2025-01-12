@@ -1,18 +1,21 @@
 package com.example.chat_web;
 
+import java.sql.Date;
+
 public class Message {
     private MessageType type;
-    private String message;
+    private String content;
     private String room;
     private String sender;
+    private Date create_at;
 
     public Message() {
     }
 
-    public Message(String sender, MessageType type, String message) {
+    public Message(String sender, MessageType type, String content) {
         this.sender = sender;
         this.type = type;
-        this.message = message;
+        this.content = content;
     }
 
 
@@ -28,12 +31,12 @@ public class Message {
         this.type = type;
     }
 
-    public String getMessage() {
-        return message;
+    public String getContent() {
+        return content;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getRoom() {
@@ -42,6 +45,18 @@ public class Message {
 
     public void setRoom(String room) {
         this.room = room;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public Date getCreate_at() {
+        return create_at;
+    }
+
+    public void setCreate_at(Date create_at) {
+        this.create_at = create_at;
     }
 
     public enum MessageType {

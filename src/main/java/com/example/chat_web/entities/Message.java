@@ -1,14 +1,16 @@
 package com.example.chat_web.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.mapping.Join;
+
+import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "messages")
 @Setter
+@Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,5 +27,12 @@ public class Message {
     @Column(name = "content")
     private String content;
 
+    @Column(name = "create_at")
+    private Timestamp createAt;
+
+
+    @ManyToOne
+    @JoinColumn(name = "conversation_id")
+    private Conversation conversation;
 
 }
